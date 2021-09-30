@@ -1,0 +1,68 @@
+> scan
+function (file = "", what = double(), nmax = -1L, n = -1L, sep = "", 
+    quote = if (identical(sep, "\n")) "" else "'\"", dec = ".", 
+    skip = 0L, nlines = 0L, na.strings = "NA", flush = FALSE, 
+    fill = FALSE, strip.white = FALSE, quiet = FALSE, blank.lines.skip = TRUE, 
+    multi.line = TRUE, comment.char = "", allowEscapes = FALSE, 
+    fileEncoding = "", encoding = "unknown", text, skipNul = FALSE) 
+{
+    na.strings <- as.character(na.strings)
+    if (!missing(n)) {
+        if (missing(nmax)) 
+            nmax <- n/pmax(length(what), 1L)
+        else stop("either specify 'nmax' or 'n', but not both.")
+    }
+    if (missing(file) && !missing(text)) {
+        file <- textConnection(text, encoding = "UTF-8")
+        encoding <- "UTF-8"
+        on.exit(close(file))
+    }
+    if (is.character(file)) 
+        if (file == "") 
+            file <- stdin()
+        else {
+            file <- if (nzchar(fileEncoding)) 
+                file(file, "r", encoding = fileEncoding)
+            else file(file, "r")
+            on.exit(close(file))
+        }
+    if (!inherits(file, "connection")) 
+        stop("'file' must be a character string or connection")
+    .Internal(scan(file, what, nmax, sep, dec, quote, skip, nlines, 
+        na.strings, flush, fill, strip.white, quiet, blank.lines.skip, 
+        multi.line, comment.char, allowEscapes, encoding, skipNul))
+}
+<bytecode: 0x55d98849b0e0>
+<environment: namespace:base>
+> test
+Error: object 'test' not found
+> network
+Error: object 'network' not found
+> file
+function (description = "", open = "", blocking = TRUE, encoding = getOption("encoding"), 
+    raw = FALSE, method = getOption("url.method", "default")) 
+{
+    .Internal(file(description, open, blocking, encoding, method, 
+        raw))
+}
+<bytecode: 0x55d988317148>
+<environment: namespace:base>
+> length)
+Error: unexpected ')' in "length)"
+> length()
+Error in length() : 0 argument passed to 'length' which requires 1
+> length(c(11, 22, 33))
+[1] 3
+> makeCacheMatrix <- function(x = matrix()) { ## arguement of matrix
+    inv <- NULL                             ## initialize NULL; 
+    set <- function(y) {                    ## define function
+        y <<- x                             ## value of matrix 
+        inv <<- NULL                        ##reset NULL
+    }
+    get <- function() x                     ## define the get fucntion - returns value of the matrix argument
+
+    setinverse <- function(inverse) inv <<- inverse  ## assign in parent environment
+    getinverse <- function() inv                     ## gets the value of inv where called
+    list(set = set, get = get, setinverse = setinverse, getinverse = getinverse)  ## order to refer 
+                                                                                  ## functions with $
+}
